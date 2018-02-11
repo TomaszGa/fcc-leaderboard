@@ -1,15 +1,22 @@
 import React, { Component } from "react";
 import axios from "axios";
 
+import LeaderboardEntry from "../../components/LeaderboardEntry/LeaderboardEntry";
+
 class Leaderboard extends Component {
   state = {
     leaderboardData: null,
+    getRecent: true,
     error: false
   };
 
   componentDidMount() {
+    let url = "https://fcctop100.herokuapp.com/api/fccusers/top/recent";
+    if (!getRecent) {
+      url = "https://fcctop100.herokuapp.com/api/fccusers/top/alltime";
+    }
     axios
-      .get("https://fcctop100.herokuapp.com/api/fccusers/top/recent")
+      .get(url)
       .then(response => {
         console.log(response.data);
         this.setState({
@@ -27,7 +34,7 @@ class Leaderboard extends Component {
     let leaderboardEntries = null;
     if (this.state.leaderboardData) {
       leaderboardEntries = this.state.leaderboardData.map(entry => {
-        return <p>I got something yo</p>;
+        return <LeaderboardEntry key={entry.username} data={entry} />;
       });
     }
     return (
