@@ -3,6 +3,8 @@ import axios from "axios";
 
 import LeaderboardEntry from "../../components/LeaderboardEntry/LeaderboardEntry";
 import DataSwitchButton from "../../components/DataSwitchButton/DataSwitchButton";
+
+import "./Leaderboard.css";
 class Leaderboard extends Component {
   state = {
     leaderboardData: null,
@@ -56,16 +58,34 @@ class Leaderboard extends Component {
 
   render() {
     let leaderboardEntries = null;
+    let count = 0;
     if (this.state.leaderboardData) {
       leaderboardEntries = this.state.leaderboardData.data.map(entry => {
-        return <LeaderboardEntry key={entry.username} data={entry} />;
+        count++;
+        return (
+          <LeaderboardEntry key={entry.username} data={entry} count={count} />
+        );
       });
     }
     return (
       <div>
         <h1>Leaderboard</h1>
-        <DataSwitchButton click={this.handleDataSwitch} />
-        {leaderboardEntries}
+        <DataSwitchButton
+          click={this.handleDataSwitch}
+          getRecent={this.state.getRecent}
+        />
+        <table className="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Camper</th>
+              <th>Recent</th>
+              <th>All time</th>
+              <th>Last Received At</th>
+            </tr>
+          </thead>
+          <tbody>{leaderboardEntries}</tbody>
+        </table>
       </div>
     );
   }
