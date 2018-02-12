@@ -56,6 +56,18 @@ class Leaderboard extends Component {
     }));
   };
 
+  handleRecentSwitch = () => {
+    this.setState({
+      getRecent: true
+    });
+  };
+
+  handleAlltimeSwitch = () => {
+    this.setState({
+      getRecent: false
+    });
+  };
+
   render() {
     let leaderboardEntries = null;
     let count = 0;
@@ -79,8 +91,8 @@ class Leaderboard extends Component {
             <tr>
               <th>#</th>
               <th>Camper</th>
-              <th>Recent</th>
-              <th>All time</th>
+              <th onClick={this.handleRecentSwitch}>Recent</th>
+              <th onClick={this.handleAlltimeSwitch}>All time</th>
               <th>Last Received At</th>
             </tr>
           </thead>
