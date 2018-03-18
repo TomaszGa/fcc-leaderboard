@@ -5,6 +5,12 @@ import LeaderboardEntry from "../../components/LeaderboardEntry/LeaderboardEntry
 import DataSwitchButton from "../../components/DataSwitchButton/DataSwitchButton";
 
 import "./Leaderboard.css";
+
+const url = {
+  recent: "https://fcctop100.herokuapp.com/api/fccusers/top/recent",
+  allTime: "https://fcctop100.herokuapp.com/api/fccusers/top/alltime"
+};
+
 class Leaderboard extends Component {
   state = {
     leaderboardData: null,
@@ -12,22 +18,7 @@ class Leaderboard extends Component {
     error: false
   };
 
-  fetchLeaderboards() {
-    if (
-      this.state.leaderboardData &&
-      ((this.state.getRecent &&
-        this.state.leaderboardData.request.responseURL ===
-          "https://fcctop100.herokuapp.com/api/fccusers/top/recent") ||
-        (!this.state.getRecent &&
-          this.state.leaderboardData.request.responseURL ===
-            "https://fcctop100.herokuapp.com/api/fccusers/top/alltime"))
-    ) {
-      return;
-    }
-    let url = "https://fcctop100.herokuapp.com/api/fccusers/top/recent";
-    if (!this.state.getRecent) {
-      url = "https://fcctop100.herokuapp.com/api/fccusers/top/alltime";
-    }
+  fetchLeaderboards(url) {
     axios
       .get(url)
       .then(response => {
@@ -43,29 +34,18 @@ class Leaderboard extends Component {
   }
 
   componentDidMount() {
-    this.fetchLeaderboards();
-  }
-
-  componentDidUpdate() {
-    this.fetchLeaderboards();
+    this.fetchLeaderboards(url.recent);
   }
 
   handleDataSwitch = () => {
+    if (this.state.getRecent) {
+      this.fetchLeaderboards(url.recent);
+    } else {
+      this.fetchLeaderboards(url.allTime);
+    }
     this.setState(prevState => ({
       getRecent: !prevState.getRecent
     }));
-  };
-
-  handleRecentSwitch = () => {
-    this.setState({
-      getRecent: true
-    });
-  };
-
-  handleAlltimeSwitch = () => {
-    this.setState({
-      getRecent: false
-    });
   };
 
   render() {
@@ -91,8 +71,8 @@ class Leaderboard extends Component {
             <tr>
               <th>#</th>
               <th>Camper</th>
-              <th onClick={this.handleRecentSwitch}>Recent</th>
-              <th onClick={this.handleAlltimeSwitch}>All time</th>
+              <th onClick={this.handleDataSwitch}>Recent</th>
+              <th onClick={this.handleDataSwitch}>All time</th>
               <th>Last Received At</th>
             </tr>
           </thead>
